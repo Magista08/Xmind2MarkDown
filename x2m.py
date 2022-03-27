@@ -20,7 +20,7 @@ def GetData(_input_file, _output_path):
     return content
 
 
-def UpdateIndex(_quene, _max_layer_nodes):
+def UpdateIndex(_quene, _max_layer_nodes, _output_file):
     global CODE
     assert (len(_quene) != _max_layer_nodes)
     quene = _quene[:]
@@ -30,20 +30,20 @@ def UpdateIndex(_quene, _max_layer_nodes):
         if quene[i] >= max_layer_nodes[i]:
             quene.pop()
             max_layer_nodes.pop()
+            if CODE is True:
+                _output_file.write("```\n")
+                CODE = False
             CODE = False
         else:
             break
     return quene, max_layer_nodes
 
 
-def RedirectPtr(_root, _quene, _output_file):
+def RedirectPtr(_root, _quene):
     global CODE
     ptr = _root
     for i in _quene[1:]:
         ptr = ptr['topics'][i]
-        if CODE is True:
-            _output_file.write("```\n")
-            CODE = False
     return ptr
 
 
@@ -65,7 +65,7 @@ def OutputText(_output_file, _text, _level):
     # Do the Normal Writing
     if _level == 2:
         output_string = "<center><h1>" + _text['title'] + "</h1></center>\n"
-    elif _level <= 4:
+    elif (_level > 2) and (_level <= 4):
         output_string = "#" * _level + " " + _text['title'] + "\n"
     elif (_level == -1) or (_text['title'] == "示例"):
         output_string = _text['title'] + "\n"
@@ -93,8 +93,8 @@ def WriteMarkDown(_dict_data, _output_path):
     while len(quene) != 0:
         if (ptr.get("topics") is None) or (len(ptr["topics"]) == 0):
             OutputText(output_file, ptr, -1)  # Default as the plain text
-            quene, max_layer_nodes = UpdateIndex(quene, max_layer_nodes)
-            ptr = RedirectPtr(dict_data, quene, output_file)
+            quene, max_layer_nodes = UpdateIndex(quene, max_layer_nodes, output_file)
+            ptr = RedirectPtr(dict_data, quene)
         else:
             quene.append(0)
             max_layer_nodes.append(len(ptr["topics"]))
@@ -133,7 +133,3 @@ if __name__ == '__main__':
     print(output_path)
     dict_data = GetData(input_file, output_path)
     WriteMarkDown(dict_data, output_path)
-
-'''
-CODE's attitude is not update yet. Still need to change whenever it is in the code mode. Only thing left
-'''
