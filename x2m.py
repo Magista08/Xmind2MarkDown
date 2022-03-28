@@ -69,8 +69,8 @@ def OutputText(_output_file, _text, _level, _quene):
     # Pages Title
     if _level == 2:
         output_string = "<center><h1>" + _text['title'] + "</h1></center>"
-        output_string += "\n[TOC]"  # Add the catalog
-        output_string += '\n<div STYLE="page-break-after: always;"></div>'  # Paging break
+        # output_string += "\n[TOC]"  # Add the catalog
+        # output_string += '\n<div STYLE="page-break-after: always;"></div>'  # Paging break
 
     # Subtitle
     elif (_level > 2) and (_level <= 5):
@@ -78,7 +78,7 @@ def OutputText(_output_file, _text, _level, _quene):
         for i in range(1, _level-1):
             serial_num.append(str(_quene[i] + 1))
         serial_text = ".".join(serial_num)
-        output_string = "#" * (_level - 1) + " " + serial_text + " " + _text['title']
+        output_string = "#" * (_level - 2) + " " + serial_text + " " + _text['title']
 
     # Plain text
     elif (_level == -1) or (_text['title'] == "示例"):
@@ -98,7 +98,7 @@ def OutputText(_output_file, _text, _level, _quene):
 
     # Note
     elif _text.get('note') is not None:
-        output_string += "\n" + _text['note']
+        output_string += "\n\n" + _text['note'] + "\n"
 
     output_string += "\n"
 
