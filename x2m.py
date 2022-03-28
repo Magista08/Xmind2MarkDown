@@ -73,16 +73,16 @@ def OutputText(_output_file, _text, _level, _quene):
         output_string += '\n<div STYLE="page-break-after: always;"></div>'  # Paging break
 
     # Subtitle
-    elif (_level > 2) and (_level <= 4):
+    elif (_level > 2) and (_level <= 5):
         serial_num = list()
-        for i in range(1, _level - 1):
+        for i in range(1, _level-1):
             serial_num.append(str(_quene[i] + 1))
         serial_text = ".".join(serial_num)
         output_string = "#" * (_level - 1) + " " + serial_text + " " + _text['title']
 
     # Plain text
     elif (_level == -1) or (_text['title'] == "示例"):
-        if _text.get('title') == None:
+        if _text.get('title') is None:
             output_string = "\t" * (len(_quene) - 5) + "\n"
         else:
             output_string = "\t" * (len(_quene) - 5) + _text['title']
@@ -98,15 +98,7 @@ def OutputText(_output_file, _text, _level, _quene):
 
     # Note
     elif _text.get('note') is not None:
-        '''
-        if "\n" in _text['note']:
-            output_string += "\n" + _text['note']
-        else:
-            output_string += "(" + _text['note'] + ")"
-        '''
-        note = _text['note'].replace('\r\n', ' | ')
-        note = note.replace('\n', ' | ')
-        output_string += " (" + note + ")"
+        output_string += "\n" + _text['note']
 
     output_string += "\n"
 
@@ -118,6 +110,7 @@ def WriteMarkDown(_dict_data, _output_path):
     output_file = open(_output_path, 'w')
 
     # parameters
+    # Depth First Search
     quene = [0]
     max_layer_nodes = [1]
     ptr = _dict_data
