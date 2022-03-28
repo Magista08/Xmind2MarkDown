@@ -21,6 +21,7 @@ def GetData(_input_file, _output_path):
 
 
 def UpdateIndex(_quene, _max_layer_nodes, _output_file):
+    # Redirect
     global CODE
     assert (len(_quene) != _max_layer_nodes)
     quene = _quene[:]
@@ -47,35 +48,67 @@ def RedirectPtr(_root, _quene):
     return ptr
 
 
-def OutputText(_output_file, _text, _level):
+def OutputText(_output_file, _text, _level, _quene):
     global CODE
     output_string = str()
-    # Check the link
+
+    # Hyperlink
     if _text.get('link') is not None:
         output_string = "[" + _text['title'] + "](" + _text['link'] + ")\n"
         _output_file.write(output_string)
         return
 
-    # Check the note
+    # Images
     elif _text['title'] == "[Image]" and _text['note'] is not None:
         _output_file.write(_text['note'])
         _output_file.write("\n")
         return
 
     # Do the Normal Writing
-    if _level == 2:
-        output_string = "<center><h1>" + _text['title'] + "</h1></center>\n"
-    elif (_level > 2) and (_level <= 4):
-        output_string = "#" * _level + " " + _text['title'] + "\n"
-    elif (_level == -1) or (_text['title'] == "示例"):
-        output_string = _text['title'] + "\n"
-    else:
-        output_string = "\t" * (_level - 5) + "- " + _text['title'] + "\n"
 
-    # Check if the next sentences are all code
-    if (_text.get('note') is not None) and (_text['note'] in CODE_TYPE):
-        output_string += "```" + _text['note'] + "\n"
+    # Pages Title
+    if _level == 2:
+        output_string = "<center><h1>" + _text['title'] + "</h1></center>"
+        output_string += "\n[TOC]"  # Add the catalog
+        output_string += '\n<div STYLE="page-break-after: always;"></div>'  # Paging break
+
+    # Subtitle
+    elif (_level > 2) and (_level <= 4):
+        serial_num = list()
+        for i in range(1, _level - 1):
+            serial_num.append(str(_quene[i] + 1))
+        serial_text = ".".join(serial_num)
+        output_string = "#" * (_level - 1) + " " + serial_text + " " + _text['title']
+
+    # Plain text
+    elif (_level == -1) or (_text['title'] == "示例"):
+        if _text.get('title') == None:
+            output_string = "\t" * (len(_quene) - 5) + "\n"
+        else:
+            output_string = "\t" * (len(_quene) - 5) + _text['title']
+
+    # Text with non-sequence serial
+    else:
+        output_string = "\t" * (_level - 5) + "- " + _text['title']
+
+    # Code
+    if (_text.get('note') is not None) and (_text['note'].lower() in CODE_TYPE):
+        output_string += "\n" + "```" + _text['note']
         CODE = True
+
+    # Note
+    elif _text.get('note') is not None:
+        '''
+        if "\n" in _text['note']:
+            output_string += "\n" + _text['note']
+        else:
+            output_string += "(" + _text['note'] + ")"
+        '''
+        note = _text['note'].replace('\r\n', ' | ')
+        note = note.replace('\n', ' | ')
+        output_string += " (" + note + ")"
+
+    output_string += "\n"
 
     _output_file.write(output_string)
 
@@ -92,13 +125,13 @@ def WriteMarkDown(_dict_data, _output_path):
     # Get the data by DFS
     while len(quene) != 0:
         if (ptr.get("topics") is None) or (len(ptr["topics"]) == 0):
-            OutputText(output_file, ptr, -1)  # Default as the plain text
+            OutputText(output_file, ptr, -1, quene)  # Default as the plain text
             quene, max_layer_nodes = UpdateIndex(quene, max_layer_nodes, output_file)
             ptr = RedirectPtr(dict_data, quene)
         else:
             quene.append(0)
             max_layer_nodes.append(len(ptr["topics"]))
-            OutputText(output_file, ptr, len(quene))
+            OutputText(output_file, ptr, len(quene), quene)
             ptr = ptr["topics"][0]
 
 
