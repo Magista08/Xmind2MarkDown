@@ -104,8 +104,8 @@ def OutputText(_output_file, _text, _level, _quene):
 
     # Note
     elif _text.get('note') is not None:
-        output_string += "\n" + space_index + "```C++\n" + space_index \
-                         + _text['note'].replace("\r\n", ("\r\n" + space_index)) + "\n" \
+        output_string += "\n" + space_index + "```\n" + space_index \
+                         + _text['note'].replace("\r\n", ("\n" + space_index)) + "\n" \
                          + space_index + "```"
 
     output_string += "\n\n"
