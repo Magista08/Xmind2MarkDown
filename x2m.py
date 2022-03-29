@@ -17,7 +17,7 @@ def GetData(_input_file, _output_path):
         'hideEmptyValue': False
     }
     content = xmindparser.xmind_to_dict(_input_file)
-    content = content[0]['topic'] # 画布
+    content = content[0]['topic']  # 画布
     return content
 
 
@@ -33,9 +33,8 @@ def UpdateIndex(_quene, _max_layer_nodes, _output_file):
             quene.pop()
             max_layer_nodes.pop()
             if CODE is True:
-                _output_file.write("```\n")
+                _output_file.write("  " * (len(quene) + 1 - CATALOG_LEVEL) + "```\n")
                 CODE = False
-            CODE = False
         else:
             break
     return quene, max_layer_nodes
@@ -76,7 +75,7 @@ def OutputText(_output_file, _text, _level, _quene):
     # Subtitle
     elif (_level > 2) and (_level <= CATALOG_LEVEL) and _text.get('topics') is not None:
         serial_num = list()
-        for i in range(1, _level-1):
+        for i in range(1, _level - 1):
             serial_num.append(str(_quene[i] + 1))
         serial_text = ".".join(serial_num)
         output_string = "#" * (_level - 2) + " " + serial_text + " " + _text['title']
@@ -96,16 +95,18 @@ def OutputText(_output_file, _text, _level, _quene):
             output_string = "\t" * (len(_quene) - 5) + _text['title']
     '''
 
+    space_index = "  " * (_level - CATALOG_LEVEL)
+
     # Code
     if (_text.get('note') is not None) and (_text['note'].lower() in CODE_TYPE):
-        output_string += "\n" + "  " * (_level - CATALOG_LEVEL - 1) +  "```" + _text['note']
+        output_string += "\n" + space_index + "```" + _text['note']
         CODE = True
 
     # Note
     elif _text.get('note') is not None:
-        output_string += "\n" + "  " * (_level - CATALOG_LEVEL) + "```\n" + "  " * (_level - CATALOG_LEVEL)\
-                         + _text['note'].replace("\r\n", ("\r\n" + "  " * (_level - CATALOG_LEVEL))) + "\n" \
-                         + "  " * (_level - CATALOG_LEVEL) + "```"
+        output_string += "\n" + space_index + "```\n" + space_index \
+                         + _text['note'].replace("\r\n", ("\r\n" + space_index)) + "\n" \
+                         + space_index + "```"
 
     output_string += "\n\n"
 
