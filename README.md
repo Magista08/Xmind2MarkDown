@@ -22,7 +22,7 @@ python x2m.py <xmind_file> <output_folder>
 
 ### Insert Image
 
-If you want to insert a image, please make sure you should insert the image with no words on the node and add the correct note in the format of how markdown can track the image
+If you want to insert a image, please make sure you should insert the image with no words on the node and add the note in the correct format of how markdown can track the image. This is how you should put in your note.
 
 ```shell
 note = ![<image_name>](<image_location>)
@@ -38,4 +38,4 @@ Add all your code as the sub-nodes on the original nodes, and a note of which pr
 CODE_TYPE = ["shell", "c++", "c", "python", "java", "javascript", "c#"]
 ```
 
-If you are using some programming language, it cannot recognize. Please add this programming language at line 10. The list named as `CODE_TYPE`. If you add your name (whatever it needs capitalize or uppercase), the code will recognize it.
+If you are using some programming language it cannot recognize, please add this programming language at line 10. The list named as `CODE_TYPE`
