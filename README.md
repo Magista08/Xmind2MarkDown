@@ -11,13 +11,13 @@ This python file is to transfer the .xmind file to .md file. Unlike the usual to
 #### Linux
 
 ```shell
-python3 x2m.py <xmind_file> <output_folder>
+python3 x2m.py <xmind_file> <output_folder> 0
 ```
 
  #### Windows
 
 ```power
-python x2m.py <xmind_file> <output_folder>
+python x2m.py <xmind_file> <output_folder> 1
 ```
 
 ### Insert Image
