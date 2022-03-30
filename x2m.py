@@ -7,7 +7,7 @@ import sys
 
 # Universal Signal
 CODE = False
-CODE_TYPE = ["shell", "c++", "c", "python", "java", "javascript", "c#"]
+CODE_TYPE = ["shell", "c++", "c", "python", "java", "javascript", "c#", "html", "css", "javascript", "php"]
 CATALOG_LEVEL = 5
 
 
@@ -32,9 +32,6 @@ def UpdateIndex(_quene, _max_layer_nodes, _output_file):
         if quene[i] >= max_layer_nodes[i]:
             quene.pop()
             max_layer_nodes.pop()
-            if CODE is True:
-                _output_file.write("  " * (len(quene) + 1 - CATALOG_LEVEL) + "```\n")
-                CODE = False
         else:
             break
     return quene, max_layer_nodes
@@ -60,8 +57,16 @@ def OutputText(_output_file, _text, _level, _quene):
 
     # Images
     elif _text['title'] == "[Image]" and _text['note'] is not None:
-        _output_file.write(_text['note'])
+        _output_file.write("  " * (_level - CATALOG_LEVEL) + _text['note'])
         _output_file.write("\n")
+        return
+
+    # Code Write
+    elif CODE is True and _text.get('note') is not None and _text.get('title') is None:
+        _output_file.write("  " * (_level - CATALOG_LEVEL))
+        _output_file.write(_text['note'].replace("\r\n", ("\n" + "  " * (_level - CATALOG_LEVEL))))
+        _output_file.write("\n" + "  " * (_level - CATALOG_LEVEL) + "```" + "\n\n")
+        CODE = False
         return
 
     # Do the Normal Writing
@@ -92,14 +97,14 @@ def OutputText(_output_file, _text, _level, _quene):
         if _text.get('title') is None:
             output_string = "\n"
         else:
-            output_string = "\t" * (len(_quene) - 5) + _text['title']
+            output_string = "  " * (_level - CATALOG_LEVEL) + _text['title']
     '''
 
     space_index = "  " * (_level - CATALOG_LEVEL)
 
-    # Code
+    # Code Detect
     if (_text.get('note') is not None) and (_text['note'].lower() in CODE_TYPE):
-        output_string += "\n" + space_index + "```" + _text['note']
+        output_string += "\n" + space_index + "```" + _text['note'].upper() + "\n"
         CODE = True
 
     # Note
@@ -107,8 +112,9 @@ def OutputText(_output_file, _text, _level, _quene):
         output_string += "\n" + space_index + "```\n" + space_index \
                          + _text['note'].replace("\r\n", ("\n" + space_index)) + "\n" \
                          + space_index + "```"
-
-    output_string += "\n\n"
+    # Change the line
+    if CODE is False:
+        output_string += "\n\n"
 
     _output_file.write(output_string)
 
@@ -164,6 +170,11 @@ if __name__ == '__main__':
     if input_file[-6:] != ".xmind":
         print("Please Get an .xmind file!!! Can't you f**king see what this tool is?")
         exit(1)
-    print(output_path)
+    print("=== Getting Data from {} ===".format(input_file))
     dict_data = GetData(input_file, output_path)
+    print("=== Done ===")
+    print()
+
+    print("=== Writing the Data to {} ===".format(output_path))
     WriteMarkDown(dict_data, output_path)
+    print("=== Done ===")
