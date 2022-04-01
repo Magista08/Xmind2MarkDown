@@ -51,7 +51,8 @@ def OutputText(_output_file, _text, _level, _quene):
 
     # Hyperlink
     if _text.get('link') is not None:
-        output_string = "[" + _text['title'] + "](" + _text['link'] + ")\n"
+        output_string = "  " * (_level - CATALOG_LEVEL) + "- "
+        output_string += "[" + _text['title'] + "](" + _text['link'] + ")\n"
         _output_file.write(output_string)
         return
 
@@ -157,6 +158,13 @@ if __name__ == '__main__':
     if int(OS) == 1:
         file_name = input_file.split('\\')[-1][:-6]
         output_path += "\\" + file_name + ".md"
+    else:
+        file_name = input_file.split('/')[-1][:-6]
+        if output_path[-1] == "/":
+            output_path += file_name + ".md"
+        else:
+            output_path += "/" + file_name + ".md"
+
     # Check the existence of the .xmind file
     try:
         open_signal = open(input_file)
@@ -170,11 +178,14 @@ if __name__ == '__main__':
     if input_file[-6:] != ".xmind":
         print("Please Get an .xmind file!!! Can't you f**king see what this tool is?")
         exit(1)
+
+    # Read Data from the .xmind file
     print("=== Getting Data from {} ===".format(input_file))
     dict_data = GetData(input_file, output_path)
     print("=== Done ===")
     print()
 
+    # Write the data to the .md file
     print("=== Writing the Data to {} ===".format(output_path))
     WriteMarkDown(dict_data, output_path)
     print("=== Done ===")
