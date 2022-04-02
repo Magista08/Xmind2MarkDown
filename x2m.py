@@ -46,27 +46,33 @@ def RedirectPtr(_root, _quene):
 
 
 def OutputText(_output_file, _text, _level, _quene):
-    global CODE
+    global CODE, TABLE
     output_string = str()
+    space_index = "  " * (_level - CATALOG_LEVEL)
 
     # Hyperlink
     if _text.get('link') is not None:
-        output_string = "  " * (_level - CATALOG_LEVEL) + "- "
+        output_string = space_index + "- "
         output_string += "[" + _text['title'] + "](" + _text['link'] + ")\n"
         _output_file.write(output_string)
         return
 
     # Images
     elif _text['title'] == "[Image]" and _text['note'] is not None:
-        _output_file.write("  " * (_level - CATALOG_LEVEL) + _text['note'])
+        _output_file.write(space_index + _text['note'])
         _output_file.write("\n")
         return
 
+    # Table
+    elif _text.get['note'] is not None and (_text['note'].lower() == "table" or _text['note'] == "表格"):
+        TABLE = True
+
+
     # Code Write
     elif CODE is True and _text.get('note') is not None and _text.get('title') is None:
-        _output_file.write("  " * (_level - CATALOG_LEVEL))
-        _output_file.write(_text['note'].replace("\r\n", ("\n" + "  " * (_level - CATALOG_LEVEL))))
-        _output_file.write("\n" + "  " * (_level - CATALOG_LEVEL) + "```" + "\n\n")
+        _output_file.write(space_index)
+        _output_file.write(_text['note'].replace("\r\n", ("\n" + space_index)))
+        _output_file.write("\n" + space_index + "```" + "\n\n")
         CODE = False
         return
 
@@ -98,10 +104,8 @@ def OutputText(_output_file, _text, _level, _quene):
         if _text.get('title') is None:
             output_string = "\n"
         else:
-            output_string = "  " * (_level - CATALOG_LEVEL) + _text['title']
+            output_string = space_index + _text['title']
     '''
-
-    space_index = "  " * (_level - CATALOG_LEVEL)
 
     # Code Detect
     if (_text.get('note') is not None) and (_text['note'].lower() in CODE_TYPE):
