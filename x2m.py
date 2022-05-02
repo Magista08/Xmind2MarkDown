@@ -46,7 +46,7 @@ def RedirectPtr(_root, _quene):
 
 
 def OutputText(_output_file, _text, _level, _quene):
-    global CODE, TABLE
+    global CODE
     output_string = str()
     space_index = "  " * (_level - CATALOG_LEVEL)
 
@@ -62,11 +62,6 @@ def OutputText(_output_file, _text, _level, _quene):
         _output_file.write(space_index + _text['note'])
         _output_file.write("\n")
         return
-
-    # Table
-    elif _text.get['note'] is not None and (_text['note'].lower() == "table" or _text['note'] == "表格"):
-        TABLE = True
-
 
     # Code Write
     elif CODE is True and _text.get('note') is not None and _text.get('title') is None:
