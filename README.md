@@ -6,6 +6,13 @@ This python file is to transfer the .xmind file to .md file. Unlike the usual to
 
 ## Usage
 
+### Pre-request
+Please make sure that python and package: `xmindparser` has installed in the system. 
+
+```shell
+pip3 install xmindparser
+```
+
 ### Command
 
 #### Linux
@@ -51,6 +58,13 @@ If you are using some programming language it cannot recognize, please add this 
 本工具使用于如何把`.xmind`文件转换为`.md` 文件。网上有许多转换工具，但是他们都是按照子节点的个数直接转换为对应数量的标题。（我觉得有点蠢 lol）所以就自己建了一个自己的工具
 
 ## 使用方法
+
+### 环境
+确保运行的机器里面有python和`xmindparser`的安装包，可以通过以下命令安装安装包
+
+```shell
+pip3 install xmindparser -i http://pypi.douban.com/simple/ --trusted-host pypi.douban.com
+```
 
 ### 命令
 
