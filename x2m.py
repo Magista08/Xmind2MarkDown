@@ -145,7 +145,7 @@ def WriteMarkDown(_dict_data, _output_path):
 if __name__ == '__main__':
     args = len(sys.argv)
     if args < 3:
-        print("USAGE: $0 <input_file> <output_path> { windows = 1 | linux = 0 }")
+        print("USAGE: python x2m.py <input_file> <output_path> { windows = 1 | linux = 0 }")
         exit(1)
 
     # Get the parameter
