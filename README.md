@@ -31,6 +31,12 @@ python x2m.py <xmind_file> <output_folder> 1
 
 In the program, line 11, there is a variable named `CATALOG_LEVEL`. The subtitle number will be (`CATALOG_LEVEL` - 2). The default of the catalog level is 3 which means `x.x.x`, i.e. `1.1.1`. If you don't want so many subtitles, you can make this variable smaller.
 
+### Add serial num before the subtitle
+The program adds the serial number before the subtitle by default. If you don't need this function, change the value of the following globale variable (line 12) to `False`
+```python
+SERIAL_NUM_NEED = True
+```
+
 ### Insert Image
 
 If you want to insert a image, please make sure you should insert the image with no words on the node and add the note in the correct format of how markdown can track the image. This is how you should put in your note.

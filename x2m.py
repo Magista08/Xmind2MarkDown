@@ -9,6 +9,7 @@ import sys
 CODE = False
 CODE_TYPE = ["shell", "c++", "c", "python", "java", "javascript", "c#", "html", "css", "javascript", "php"]
 CATALOG_LEVEL = 5
+SERIAL_NUM_NEED = True
 
 
 def GetData(_input_file, _output_path):
@@ -46,7 +47,7 @@ def RedirectPtr(_root, _quene):
 
 
 def OutputText(_output_file, _text, _level, _quene):
-    global CODE
+    global CODE, SERIAL_NUM_NEED
     output_string = str()
     space_index = "  " * (_level - CATALOG_LEVEL)
 
@@ -81,11 +82,14 @@ def OutputText(_output_file, _text, _level, _quene):
 
     # Subtitle
     elif (_level > 2) and (_level <= CATALOG_LEVEL) and _text.get('topics') is not None:
-        serial_num = list()
-        for i in range(1, _level - 1):
-            serial_num.append(str(_quene[i] + 1))
-        serial_text = ".".join(serial_num)
-        output_string = "#" * (_level - 2) + " " + serial_text + " " + _text['title']
+        if SERIAL_NUM_NEED:
+            serial_num = list()
+            for i in range(1, _level - 1):
+                serial_num.append(str(_quene[i] + 1))
+            serial_text = ".".join(serial_num)
+            output_string = "#" * (_level - 2) + " " + serial_text + " " + _text['title']
+        else:
+            output_string = "#" * (_level - 2) + " " + _text['title']
 
     # Text with non-sequence serial
     else:
